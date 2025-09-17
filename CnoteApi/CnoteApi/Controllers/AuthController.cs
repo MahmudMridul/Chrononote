@@ -1,4 +1,6 @@
 ﻿using CnoteApi.Dtos;
+using CnoteApi.Models;
+using CnoteApi.Validations;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -11,14 +13,22 @@ namespace CnoteApi.Controllers
         [HttpPost("signup")]
         public async Task<ActionResult<ApiResponse>> Signup([FromBody] SignupDto signupDto)
         {
-            var response = new ApiResponse()
+            if (!SignupValidator.IsValidSignupDto(signupDto))
             {
-                Data = signupDto,
-                Message = "User registration test",
-                Success = true,
-                StatusCode = HttpStatusCode.OK
+                ApiResponse res = ApiResponse.BadRequest(msg: "Valid username, email and password required.");
+                return BadRequest(res);
+            }
+
+            User newUser = new User
+            {
+                Username = signupDto.Username,
+                Email = signupDto.Email,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = null,
+                IsActive = true
             };
-            return Ok(response);
+            ApiResponse response = ApiResponse.Created(data: newUser, msg: "User registration test success");
+            return Created("", response);
         }
 
         // GET: api/<AuthController>

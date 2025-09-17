@@ -8,5 +8,27 @@ namespace CnoteApi.Dtos
         public string Message { get; set; } = string.Empty;
         public bool Success { get; set; }
         public HttpStatusCode StatusCode { get; set; }
+
+        public static ApiResponse BadRequest(object? data = null, string msg = "")
+        {
+            return new ApiResponse
+            {
+                Data = data,
+                Message = msg,
+                Success = false,
+                StatusCode = HttpStatusCode.BadRequest
+            };
+        }
+
+        public static ApiResponse Created(object? data = null, string msg = "")
+        {
+            return new ApiResponse
+            {
+                Data = data,
+                Message = msg,
+                Success = true,
+                StatusCode = HttpStatusCode.Created
+            };
+        }
     }
 }
