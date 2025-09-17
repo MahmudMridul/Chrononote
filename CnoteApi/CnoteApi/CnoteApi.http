@@ -1,0 +1,6 @@
+@CnoteApi_HostAddress = http://localhost:5115
+
+GET {{CnoteApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
