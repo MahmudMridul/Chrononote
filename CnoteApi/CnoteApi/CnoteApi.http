@@ -5,9 +5,9 @@ POST {{base}}/auth/signup
 Accept: application/json
 Content-Type: application/json
 {
-    "username": "testuser",
+    "username": "testuser_1",
     "password": "Test@1234",
-    "email": "test.user@email.com"
+    "email": "test.user.1@email.com"
 }
 
 ###

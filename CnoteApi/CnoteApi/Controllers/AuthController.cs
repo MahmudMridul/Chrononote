@@ -1,7 +1,7 @@
 ﻿using CnoteApi.Dtos;
 using CnoteApi.Models;
+using CnoteApi.Repositories;
 using CnoteApi.Services;
-using CnoteApi.Validations;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -11,12 +11,21 @@ namespace CnoteApi.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        [HttpPost("signup")]
-        public async Task<ActionResult<ApiResponse>> Signup([FromBody] SignupDto signupDto)
+        private readonly SignupValidationService _signupValidationService;
+        private readonly IUserRepository _userRepo;
+        public AuthController(SignupValidationService signupValidationService, IUserRepository userRepo)
         {
-            if (!SignupValidator.IsValidSignupDto(signupDto))
+            _signupValidationService = signupValidationService;
+            _userRepo = userRepo;
+        }
+
+        [HttpPost("signup")]
+        public async Task<ActionResult<ApiResponse>> Signup([FromBody] SignupDto? signupDto)
+        {
+            ValidationResult result = await _signupValidationService.IsValidSignupDto(signupDto);
+            if (!result.IsValid)
             {
-                ApiResponse res = ApiResponse.BadRequest(msg: "Valid username, email and password required.");
+                ApiResponse res = ApiResponse.BadRequest(msg: result.Message);
                 return BadRequest(res);
             }
 
@@ -31,7 +40,10 @@ namespace CnoteApi.Controllers
                 UpdatedAt = null,
                 IsActive = true
             };
-            ApiResponse response = ApiResponse.Created(data: newUser, msg: "User registration test success");
+
+            await _userRepo.AddAsync(newUser);
+
+            ApiResponse response = ApiResponse.Created(msg: "Signup successfull");
             return Created("", response);
         }
 
