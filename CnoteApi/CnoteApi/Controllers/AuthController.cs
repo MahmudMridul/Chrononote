@@ -11,18 +11,18 @@ namespace CnoteApi.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly SignupValidationService _signupValidationService;
+        private readonly AuthValidationService _authValidationService;
         private readonly IUserRepository _userRepo;
-        public AuthController(SignupValidationService signupValidationService, IUserRepository userRepo)
+        public AuthController(AuthValidationService authValidationService, IUserRepository userRepo)
         {
-            _signupValidationService = signupValidationService;
+            _authValidationService = authValidationService;
             _userRepo = userRepo;
         }
 
         [HttpPost("signup")]
         public async Task<ActionResult<ApiResponse>> Signup([FromBody] SignupDto? signupDto)
         {
-            ValidationResult result = await _signupValidationService.IsValidSignupDto(signupDto);
+            ValidationResult result = await _authValidationService.IsValidSignupDto(signupDto);
             if (!result.IsValid)
             {
                 ApiResponse res = ApiResponse.BadRequest(msg: result.Message);
@@ -47,36 +47,18 @@ namespace CnoteApi.Controllers
             return Created("", response);
         }
 
-        // GET: api/<AuthController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        [HttpPost("signin")]
+        public async Task<ActionResult<ApiResponse>> Signin([FromBody] SigninDto signinDto)
         {
-            return new string[] { "value1", "value2" };
-        }
+            ValidationResult result = await _authValidationService.IsValidSigninDto(signinDto);
+            if (!result.IsValid)
+            {
+                ApiResponse resp = ApiResponse.UnAuthorized(msg: result.Message);
+                return Unauthorized(resp);
+            }
 
-        // GET api/<AuthController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<AuthController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<AuthController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<AuthController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            ApiResponse res = ApiResponse.Ok(msg: "Signin successfull");
+            return Ok(res);
         }
     }
 }

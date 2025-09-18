@@ -22,7 +22,7 @@ namespace CnoteApi
             builder.Services.AddScoped<IUserRepository, UserRepository>();
 
             // Services
-            builder.Services.AddScoped<SignupValidationService>();
+            builder.Services.AddScoped<AuthValidationService>();
             
 
             var app = builder.Build();

@@ -1,10 +1,11 @@
 ﻿using CnoteApi.Dtos;
+using CnoteApi.Models;
 using CnoteApi.Repositories;
 using System.Text.RegularExpressions;
 
 namespace CnoteApi.Services
 {
-    public class SignupValidationService
+    public class AuthValidationService
     {
         public const int MIN_USERNAME_LENGTH = 4;
         public const int MAX_USERNAME_LENGTH = 50;
@@ -14,7 +15,7 @@ namespace CnoteApi.Services
 
         private readonly IUserRepository _userRepo;
 
-        public SignupValidationService(IUserRepository userRepo)
+        public AuthValidationService(IUserRepository userRepo)
         {
             _userRepo = userRepo;
         }
@@ -43,6 +44,35 @@ namespace CnoteApi.Services
             }
 
             return ValidationResult.Create("Valid data", true);
+        }
+
+        public async Task<ValidationResult> IsValidSigninDto(SigninDto? signinDto)
+        {
+            bool isValidDto = 
+                signinDto is not null &&
+                IsValidUsername(signinDto.Username) &&
+                IsValidPassword(signinDto.Password);
+
+            if (!isValidDto)
+            {
+                return ValidationResult.Create("Invalid username or password");
+            }
+
+            User? user = await _userRepo.GetUserByUsername(signinDto.Username);
+
+            if (user is null)
+            {
+                return ValidationResult.Create("User is not registered. Sign up first");
+            }
+
+            bool isPasswordCorrect = PasswordService.VerifyPassword(signinDto.Password, user.PasswordHash);
+
+            if (!isPasswordCorrect)
+            {
+                return ValidationResult.Create("Incorrect password");
+            }
+
+            return ValidationResult.Create("Valid data", true, user);
         }
 
         private bool IsValidUsername(string username)
