@@ -1,3 +1,8 @@
+using CnoteApi.Database;
+using CnoteApi.Repositories;
+using CnoteApi.Services;
+using Microsoft.EntityFrameworkCore;
+
 namespace CnoteApi
 {
     public class Program
@@ -8,6 +13,16 @@ namespace CnoteApi
 
             // Add services to the container.
             builder.Services.AddControllers();
+
+            builder.Services.AddDbContext<AppDbContext>(
+                op => op.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+            );
+
+            // Repositories
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+            // Services
+            builder.Services.AddScoped<SignupValidationService>();
             
 
             var app = builder.Build();

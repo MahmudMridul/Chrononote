@@ -1,6 +1,13 @@
-@CnoteApi_HostAddress = http://localhost:5115
+@base = http://localhost:5115/api
 
-GET {{CnoteApi_HostAddress}}/weatherforecast/
+### Signup API Test
+POST {{base}}/auth/signup
 Accept: application/json
+Content-Type: application/json
+{
+    "username": "testuser_1",
+    "password": "Test@1234",
+    "email": "test.user.1@email.com"
+}
 
 ###
