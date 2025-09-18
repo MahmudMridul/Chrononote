@@ -1,25 +1,51 @@
 ﻿using CnoteApi.Dtos;
+using CnoteApi.Repositories;
 using System.Text.RegularExpressions;
 
-namespace CnoteApi.Validations
+namespace CnoteApi.Services
 {
-    public static class SignupValidator
+    public class SignupValidationService
     {
         public const int MIN_USERNAME_LENGTH = 4;
         public const int MAX_USERNAME_LENGTH = 50;
         public const int MAX_EMAIL_LENGTH = 100;
         public const int MIN_PASS_LENGTH = 8;
         public const int MAX_PASS_LENGTH = 30;
-        public static bool IsValidSignupDto(SignupDto signupDto)
+
+        private readonly IUserRepository _userRepo;
+
+        public SignupValidationService(IUserRepository userRepo)
         {
-            if (signupDto is null) return false;
-            if (!IsValidUsername(signupDto.Username)) return false;
-            if (!IsValidEmail(signupDto.Email)) return false;
-            if (!IsValidPassword(signupDto.Password)) return false;
-            return true;
+            _userRepo = userRepo;
         }
 
-        private static bool IsValidUsername(string username)
+        public async Task<ValidationResult> IsValidSignupDto(SignupDto? signupDto)
+        {
+            bool isValidDto =
+                signupDto is not null &&
+                IsValidUsername(signupDto.Username) &&
+                IsValidEmail(signupDto.Email) &&
+                IsValidPassword(signupDto.Password);
+
+            
+            if (!isValidDto) 
+            {
+                return ValidationResult.Create("Invalid username, email or password");
+            }
+
+            bool emailOrUsernameExists = 
+                await _userRepo.UsernameExists(signupDto.Username) ||
+                await _userRepo.EmailExists(signupDto.Email);
+
+            if (emailOrUsernameExists)
+            {
+                return ValidationResult.Create("Username or email already exists");
+            }
+
+            return ValidationResult.Create("Valid data", true);
+        }
+
+        private bool IsValidUsername(string username)
         {
             bool isValidUsername = 
                 !string.IsNullOrWhiteSpace(username) && 
@@ -30,7 +56,7 @@ namespace CnoteApi.Validations
             return isValidUsername;
         }
 
-        private static bool IsValidEmail(string email)
+        private bool IsValidEmail(string email)
         {
             string emailPattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
 
@@ -42,7 +68,7 @@ namespace CnoteApi.Validations
             return isValidEmail;
         }
 
-        private static bool IsValidPassword(string password)
+        private bool IsValidPassword(string password)
         {
             string specialChars = "!@#$%^&*()_+-=[]{}|;:,.<>?";
 
