@@ -1,8 +1,9 @@
 ﻿using CnoteApi.Dtos;
 using CnoteApi.Models;
+using CnoteApi.Services;
 using CnoteApi.Validations;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
+
 
 namespace CnoteApi.Controllers
 {
@@ -19,10 +20,13 @@ namespace CnoteApi.Controllers
                 return BadRequest(res);
             }
 
+            string hashedPassword = PasswordService.HashPassword(signupDto.Password);
+
             User newUser = new User
             {
                 Username = signupDto.Username,
                 Email = signupDto.Email,
+                PasswordHash = hashedPassword,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = null,
                 IsActive = true
