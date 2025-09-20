@@ -1,6 +1,6 @@
 ﻿namespace CnoteApi.Models
 {
-    public class RefreshTokens
+    public class RefreshToken
     {
         public int Id { get; set; }
         public string Token { get; set; } = null!;
