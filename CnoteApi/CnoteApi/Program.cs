@@ -22,9 +22,11 @@ namespace CnoteApi
 
             // Repositories
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
             // Services
             builder.Services.AddScoped<AuthValidationService>();
+            builder.Services.AddScoped<TokenService>();
 
             // CORS
             builder.Services.AddCors(op =>
