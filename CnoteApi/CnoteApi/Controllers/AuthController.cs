@@ -39,7 +39,7 @@ namespace CnoteApi.Controllers
                 return BadRequest(res);
             }
 
-            string hashedPassword = PasswordService.HashPassword(signupDto.Password);
+            string hashedPassword = PasswordService.HashPassword(signupDto!.Password);
 
             User newUser = new User
             {
@@ -74,20 +74,14 @@ namespace CnoteApi.Controllers
 
             await _refreshTokenRepo.RemoveByUserId(user.Id);
 
-            RefreshToken newRefreshToken = new RefreshToken
-            {
-                Token = refreshToken,
-                UserId = user.Id,
-                Expires = DateTime.UtcNow.AddDays(int.Parse(_config["RefreshTokenExpirationDays"]!)),
-                Created = DateTime.UtcNow
-            };
+            RefreshToken newRefreshToken = _tokenService.CreateRefreshToken(refreshToken, user.Id);
 
             await _refreshTokenRepo.AddAsync(newRefreshToken);
 
             HttpContext.Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions
             {
                 HttpOnly = true,
-                Expires = DateTime.UtcNow.AddDays(int.Parse(_config["RefreshTokenExpirationDays"]!)),
+                Expires = newRefreshToken.Expires,
                 SameSite = SameSiteMode.Lax,
                 Secure = true
             });
