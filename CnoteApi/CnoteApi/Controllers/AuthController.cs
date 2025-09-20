@@ -11,12 +11,22 @@ namespace CnoteApi.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
+        private readonly IConfiguration _config;
+
         private readonly AuthValidationService _authValidationService;
+        private readonly TokenService _tokenService;
+
         private readonly IUserRepository _userRepo;
-        public AuthController(AuthValidationService authValidationService, IUserRepository userRepo)
+        private readonly IRefreshTokenRepository _refreshTokenRepo;
+        public AuthController(IConfiguration config, AuthValidationService authValidationService, TokenService tokenService, IUserRepository userRepo, IRefreshTokenRepository refreshTokenRepo)
         {
+            _config = config;
+
             _authValidationService = authValidationService;
+            _tokenService = tokenService;
+
             _userRepo = userRepo;
+            _refreshTokenRepo = refreshTokenRepo;
         }
 
         [HttpPost("signup")]
@@ -59,10 +69,41 @@ namespace CnoteApi.Controllers
 
             User user = (User)result.Data!;
 
-            string accessToken = TokenService.GenerateAccessToken(user);
-            string refreshToken = TokenService.GenerateRefreshToken();
+            string accessToken = _tokenService.GenerateAccessToken(user);
+            string refreshToken = _tokenService.GenerateRefreshToken();
 
-            ApiResponse res = ApiResponse.Ok(msg: "Signin successfull");
+            await _refreshTokenRepo.RemoveByUserId(user.Id);
+
+            RefreshToken newRefreshToken = new RefreshToken
+            {
+                Token = refreshToken,
+                UserId = user.Id,
+                Expires = DateTime.UtcNow.AddDays(int.Parse(_config["RefreshTokenExpirationDays"]!)),
+                Created = DateTime.UtcNow
+            };
+
+            await _refreshTokenRepo.AddAsync(newRefreshToken);
+
+            HttpContext.Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = DateTime.UtcNow.AddDays(int.Parse(_config["RefreshTokenExpirationDays"]!)),
+                SameSite = SameSiteMode.Lax,
+                Secure = true
+            });
+
+            SigninResponseDto signinResponseDto = new SigninResponseDto
+            {
+                UserId = user.Id,
+                Username = user.Username,
+                Email = user.Email,
+                AccessToken = accessToken,
+                RefreshToken = refreshToken,
+                AccessTokenExpiresAt = DateTime.UtcNow.AddMinutes(int.Parse(_config["JwtSettings:AccessTokenExpirationMinutes"]!)),
+                RefreshTokenExpiresAt = newRefreshToken.Expires
+            };
+
+            ApiResponse res = ApiResponse.Ok(data: signinResponseDto, msg: "Signin successfull");
             return Ok(res);
         }
     }

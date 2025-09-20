@@ -1,5 +1,6 @@
 ﻿using CnoteApi.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace CnoteApi.Database
 {
@@ -11,6 +12,7 @@ namespace CnoteApi.Database
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; } 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -35,6 +37,11 @@ namespace CnoteApi.Database
 
                 entity.HasIndex(e => e.Username).IsUnique();
                 entity.HasIndex(e => e.Email).IsUnique();
+            });
+
+            modelBuilder.Entity<RefreshToken>(entity => 
+            {
+                entity.Property(e => e.Id).UseIdentityColumn();
             });
         }
     }

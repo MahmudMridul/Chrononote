@@ -9,3 +9,11 @@ select
   "UpdatedAt",
   "IsActive"
 from cnote."Users";
+
+select 
+  "Id",
+  "Token",
+  "Expires",
+  "Created",
+  "UserId"
+from cnote."RefreshTokens";

@@ -7,12 +7,12 @@ namespace CnoteApi.Services
 {
     public class TokenService
     {
-        private static IConfiguration _config = null!;
+        private readonly IConfiguration _config = null!;
         public TokenService(IConfiguration config)
         {
             _config = config;
         }
-        public static string GenerateAccessToken(User user)
+        public string GenerateAccessToken(User user)
         {
             Claim[] claims = new Claim[]
             {
@@ -30,13 +30,13 @@ namespace CnoteApi.Services
                 issuer: _config["JwtSettings:Issuer"],
                 audience: _config["JwtSettings:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(double.Parse(_config["JwtSettings:AccessTokenExpirationMinutes"]!)),
+                expires: DateTime.UtcNow.AddMinutes(int.Parse(_config["JwtSettings:AccessTokenExpirationMinutes"]!)),
                 signingCredentials: creds
             );
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public static string GenerateRefreshToken()
+        public string GenerateRefreshToken()
         {
             byte[] randomBytes = new byte[32];
             using (var rng = System.Security.Cryptography.RandomNumberGenerator.Create())
