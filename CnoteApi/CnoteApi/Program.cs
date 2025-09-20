@@ -38,9 +38,10 @@ namespace CnoteApi
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
                         ValidAudience = builder.Configuration["JwtSettings:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"])),
+                        IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]!)),
                         ClockSkew = TimeSpan.Zero
                     };
+
                 });
             
 

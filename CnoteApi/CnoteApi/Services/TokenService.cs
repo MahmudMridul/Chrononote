@@ -23,14 +23,14 @@ namespace CnoteApi.Services
                 new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString())
             };
 
-            SymmetricSecurityKey key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_config["JwtSettings:Key"]));
+            SymmetricSecurityKey key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_config["JwtSettings:Key"]!));
             SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             JwtSecurityToken token = new JwtSecurityToken(
                 issuer: _config["JwtSettings:Issuer"],
                 audience: _config["JwtSettings:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(double.Parse(_config["JwtSettings:AccessTokenExpirationMinutes"])),
+                expires: DateTime.UtcNow.AddMinutes(double.Parse(_config["JwtSettings:AccessTokenExpirationMinutes"]!)),
                 signingCredentials: creds
             );
             return new JwtSecurityTokenHandler().WriteToken(token);
