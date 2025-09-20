@@ -26,6 +26,27 @@ namespace CnoteApi
             // Services
             builder.Services.AddScoped<AuthValidationService>();
 
+            // CORS
+            builder.Services.AddCors(op =>
+            {
+                var cors = builder.Configuration.GetSection("Cors");
+                var allowedOrigins = cors.GetSection("AllowedOrigins").Get<string[]>() ?? Array.Empty<string>();
+                var allowedMethods = cors.GetSection("AllowedMethods").Get<string[]>() ?? Array.Empty<string>();
+                var allowCredentials = cors.GetValue<bool>("AllowCredentials");
+
+                op.AddPolicy("AllowClient", policy =>
+                {
+                    policy.WithOrigins(allowedOrigins)
+                    .WithMethods(allowedMethods)
+                    .AllowAnyHeader();
+
+                    if (allowCredentials)
+                    {
+                        policy.AllowCredentials();
+                    }
+                });
+            });
+
             // JWT 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(op =>
@@ -46,6 +67,8 @@ namespace CnoteApi
             
 
             var app = builder.Build();
+
+            app.UseCors("AllowClient"); 
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
