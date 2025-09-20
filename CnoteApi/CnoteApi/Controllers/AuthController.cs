@@ -57,6 +57,11 @@ namespace CnoteApi.Controllers
                 return Unauthorized(resp);
             }
 
+            User user = (User)result.Data!;
+
+            string accessToken = TokenService.GenerateAccessToken(user);
+            string refreshToken = TokenService.GenerateRefreshToken();
+
             ApiResponse res = ApiResponse.Ok(msg: "Signin successfull");
             return Ok(res);
         }

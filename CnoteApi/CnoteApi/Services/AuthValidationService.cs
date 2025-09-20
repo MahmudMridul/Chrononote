@@ -58,7 +58,7 @@ namespace CnoteApi.Services
                 return ValidationResult.Create("Invalid username or password");
             }
 
-            User? user = await _userRepo.GetUserByUsername(signinDto.Username);
+            User? user = await _userRepo.GetUserByUsername(signinDto!.Username);
 
             if (user is null)
             {
