@@ -4,6 +4,7 @@ namespace CnoteApi.Repositories
 {
     public interface IRefreshTokenRepository
     {
-        void AddAsync(RefreshToken token);
+        Task AddAsync(RefreshToken token);
+        Task RemoveByUserId(int userId);
     }
 }
