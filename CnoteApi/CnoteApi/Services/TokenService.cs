@@ -45,5 +45,18 @@ namespace CnoteApi.Services
                 return Convert.ToBase64String(randomBytes);
             }
         }
+
+        public RefreshToken CreateRefreshToken(string token, int userId)
+        {
+            return new RefreshToken
+            {
+                Token = token,
+                UserId = userId,
+                Expires = DateTime.UtcNow.AddDays(int.Parse(_config["RefreshTokenExpirationDays"]!)),
+                Created = DateTime.UtcNow
+            };
+        }
+
+
     }
 }
