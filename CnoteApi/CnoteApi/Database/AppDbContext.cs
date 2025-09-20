@@ -1,5 +1,6 @@
 ﻿using CnoteApi.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace CnoteApi.Database
 {
@@ -36,6 +37,11 @@ namespace CnoteApi.Database
 
                 entity.HasIndex(e => e.Username).IsUnique();
                 entity.HasIndex(e => e.Email).IsUnique();
+            });
+
+            modelBuilder.Entity<RefreshToken>(entity => 
+            {
+                entity.Property(e => e.Id).UseIdentityColumn();
             });
         }
     }
