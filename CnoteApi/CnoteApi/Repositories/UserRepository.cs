@@ -19,6 +19,11 @@ namespace CnoteApi.Repositories
             return user;
         }   
 
+        public async Task<User?> GetUserByUsername(string? username)
+        {
+            return await _dbContext.Users.FirstOrDefaultAsync(u => u.Username == username);
+        }
+
         public async Task<bool> UsernameExists(string? username)
         {
             return await _dbContext.Users.AnyAsync(u => u.Username == username);

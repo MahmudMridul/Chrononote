@@ -10,4 +10,13 @@ Content-Type: application/json
     "email": "test.user.1@email.com"
 }
 
+### Singin API Test
+POST {{base}}/auth/signin
+Accept: application/json
+Content-Type: application/json
+{
+    "username": "testuser_1",
+    "password": "Test@1234"
+}
+
 ###

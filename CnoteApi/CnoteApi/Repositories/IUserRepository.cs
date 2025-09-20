@@ -5,6 +5,7 @@ namespace CnoteApi.Repositories
     public interface IUserRepository
     {
         Task<User> AddAsync(User user);
+        Task<User?> GetUserByUsername(string username);
         Task<bool> UsernameExists(string username);
         Task<bool> EmailExists(string email);
     }

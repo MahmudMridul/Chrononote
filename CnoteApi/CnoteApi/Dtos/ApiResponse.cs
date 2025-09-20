@@ -30,5 +30,27 @@ namespace CnoteApi.Dtos
                 StatusCode = HttpStatusCode.Created
             };
         }
+
+        public static ApiResponse UnAuthorized(object? data = null, string msg = "")
+        {
+            return new ApiResponse
+            {
+                Data = data,
+                Message = msg,
+                Success = false,
+                StatusCode = HttpStatusCode.Unauthorized
+            };
+        }
+
+        public static ApiResponse Ok(object? data = null, string msg = "")
+        {
+            return new ApiResponse
+            {
+                Data = data,
+                Message = msg,
+                Success = true,
+                StatusCode = HttpStatusCode.OK
+            };
+        }
     }
 }
