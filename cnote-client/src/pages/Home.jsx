@@ -1,12 +1,38 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Outlet, useNavigate, useLocation } from "react-router";
+
+const menuItems = [
+  { id: "watch", name: "Watch", icon: "clock" },
+  { id: "timesheet", name: "Time Sheet", icon: "calendar" },
+  { id: "notes", name: "Notes", icon: "document" },
+];
 
 export default function Home() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const [activeMenuItem, setActiveMenuItem] = useState("watch");
+  const navigate = useNavigate();
+  const location = useLocation();
 
   // Mock username - in real app, this would come from auth context
   const username = "JohnDoe";
+
+  // Get active menu item from current route
+  const getActiveMenuItem = () => {
+    const path = location.pathname;
+    if (path.includes("/watch")) return "watch";
+    if (path.includes("/timesheet")) return "timesheet";
+    if (path.includes("/notes")) return "notes";
+    return "watch"; // default
+  };
+
+  const activeMenuItem = getActiveMenuItem();
+
+  // Redirect to /home/watch if visiting just /home
+  useEffect(() => {
+    if (location.pathname === "/home") {
+      navigate("/home/watch", { replace: true });
+    }
+  }, [location.pathname, navigate]);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -17,7 +43,7 @@ export default function Home() {
   };
 
   const handleMenuItemClick = (item) => {
-    setActiveMenuItem(item);
+    navigate(`/home/${item}`);
     // Close sidebar on mobile after selection
     if (window.innerWidth < 768) {
       setIsSidebarOpen(false);
@@ -61,8 +87,7 @@ export default function Home() {
             </svg>
           </button>
 
-          {/* Empty space for desktop (sidebar will be below header) */}
-          <div className="hidden md:block"></div>
+          <h1 className="text-xl font-bold text-white">Chrononote</h1>
 
           {/* User menu - always at top right */}
           <div className="relative">
@@ -118,7 +143,6 @@ export default function Home() {
           } transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:h-screen md:inset-0 md:top-0`}
         >
           <div className="flex items-center justify-between h-16 px-4 bg-gray-900 md:hidden">
-            <h1 className="text-xl font-bold text-white">Chrononote</h1>
             <button
               onClick={toggleSidebar}
               className="text-gray-400 hover:text-white focus:outline-none focus:text-white"
@@ -139,18 +163,9 @@ export default function Home() {
             </button>
           </div>
 
-          {/* App title for desktop */}
-          <div className="hidden md:block px-4 py-4 bg-gray-900 border-b border-gray-700">
-            <h1 className="text-xl font-bold text-white">Chrononote</h1>
-          </div>
-
           <nav className="mt-8 md:mt-4">
             <div className="px-4 space-y-2">
-              {[
-                { id: "watch", name: "Watch", icon: "clock" },
-                { id: "timesheet", name: "Time Sheet", icon: "calendar" },
-                { id: "notes", name: "Notes", icon: "document" },
-              ].map((item) => (
+              {menuItems.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => handleMenuItemClick(item.id)}
@@ -224,7 +239,7 @@ export default function Home() {
         {/* Main content */}
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* Main content area */}
-          <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-900 p-6">
+          <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-900 p-3">
             <div className="max-w-7xl mx-auto">
               <h2 className="text-2xl font-bold text-white mb-6">
                 {activeMenuItem === "watch" && "Watch"}
@@ -232,38 +247,9 @@ export default function Home() {
                 {activeMenuItem === "notes" && "Notes"}
               </h2>
 
-              {/* Content based on active menu item */}
+              {/* React Router Outlet for nested routes */}
               <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-                {activeMenuItem === "watch" && (
-                  <div className="text-center">
-                    <div className="text-6xl font-mono text-white mb-4">
-                      {new Date().toLocaleTimeString()}
-                    </div>
-                    <p className="text-gray-400">Current time display</p>
-                  </div>
-                )}
-
-                {activeMenuItem === "timesheet" && (
-                  <div>
-                    <h3 className="text-lg font-semibold text-white mb-4">
-                      Time Sheet
-                    </h3>
-                    <p className="text-gray-400">
-                      Time tracking functionality will be implemented here.
-                    </p>
-                  </div>
-                )}
-
-                {activeMenuItem === "notes" && (
-                  <div>
-                    <h3 className="text-lg font-semibold text-white mb-4">
-                      Notes
-                    </h3>
-                    <p className="text-gray-400">
-                      Notes management functionality will be implemented here.
-                    </p>
-                  </div>
-                )}
+                <Outlet />
               </div>
             </div>
           </main>

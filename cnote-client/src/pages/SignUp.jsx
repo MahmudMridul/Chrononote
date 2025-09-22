@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { apiRequest } from "../api/api";
 // import { validateSignupForm } from '../services/authValidationService'
 
@@ -8,6 +8,7 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const handleUsernameChange = (e) => {
     const value = e.target.value;
@@ -40,6 +41,8 @@ export default function SignUp() {
         body
       );
       console.log("User signed up successfully:", response);
+      // Redirect to home/watch after successful sign-up
+      navigate("/home/watch");
     } catch (error) {
       console.error("Error signing up user:", error);
     }
