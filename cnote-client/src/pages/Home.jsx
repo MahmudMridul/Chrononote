@@ -1,0 +1,282 @@
+import { useState } from "react";
+
+export default function Home() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [activeMenuItem, setActiveMenuItem] = useState("watch");
+
+  // Mock username - in real app, this would come from auth context
+  const username = "JohnDoe";
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const toggleUserMenu = () => {
+    setIsUserMenuOpen(!isUserMenuOpen);
+  };
+
+  const handleMenuItemClick = (item) => {
+    setActiveMenuItem(item);
+    // Close sidebar on mobile after selection
+    if (window.innerWidth < 768) {
+      setIsSidebarOpen(false);
+    }
+  };
+
+  const handleLogout = () => {
+    // Implement logout logic here
+    console.log("Logging out...");
+    setIsUserMenuOpen(false);
+  };
+
+  const handleProfileSettings = () => {
+    // Implement profile settings navigation here
+    console.log("Opening profile settings...");
+    setIsUserMenuOpen(false);
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-900">
+      {/* Top Header - spans full width */}
+      <header className="fixed top-0 left-0 right-0 z-30 bg-gray-800 shadow-sm border-b border-gray-700 h-16">
+        <div className="flex items-center justify-between h-full px-4">
+          {/* Mobile menu button */}
+          <button
+            onClick={toggleSidebar}
+            className="md:hidden text-gray-400 hover:text-white focus:outline-none focus:text-white"
+          >
+            <svg
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+
+          {/* Empty space for desktop (sidebar will be below header) */}
+          <div className="hidden md:block"></div>
+
+          {/* User menu - always at top right */}
+          <div className="relative">
+            <button
+              onClick={toggleUserMenu}
+              className="flex items-center text-sm font-medium text-white hover:text-gray-300 focus:outline-none focus:text-gray-300 transition-colors duration-200"
+            >
+              <span className="mr-2">{username}</span>
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </button>
+
+            {/* User dropdown menu */}
+            {isUserMenuOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg border border-gray-700 z-50">
+                <div className="py-1">
+                  <button
+                    onClick={handleProfileSettings}
+                    className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200"
+                  >
+                    Profile Settings
+                  </button>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200"
+                  >
+                    Logout
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </header>
+
+      {/* Main layout with sidebar and content */}
+      <div className="flex pt-16">
+        {/* Sidebar */}
+        <div
+          className={`fixed inset-y-0 left-0 top-16 z-20 w-64 bg-gray-800 transform ${
+            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          } transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:h-screen md:inset-0 md:top-0`}
+        >
+          <div className="flex items-center justify-between h-16 px-4 bg-gray-900 md:hidden">
+            <h1 className="text-xl font-bold text-white">Chrononote</h1>
+            <button
+              onClick={toggleSidebar}
+              className="text-gray-400 hover:text-white focus:outline-none focus:text-white"
+            >
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+
+          {/* App title for desktop */}
+          <div className="hidden md:block px-4 py-4 bg-gray-900 border-b border-gray-700">
+            <h1 className="text-xl font-bold text-white">Chrononote</h1>
+          </div>
+
+          <nav className="mt-8 md:mt-4">
+            <div className="px-4 space-y-2">
+              {[
+                { id: "watch", name: "Watch", icon: "clock" },
+                { id: "timesheet", name: "Time Sheet", icon: "calendar" },
+                { id: "notes", name: "Notes", icon: "document" },
+              ].map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => handleMenuItemClick(item.id)}
+                  className={`w-full flex items-center px-4 py-2 text-sm font-medium rounded-md transition-colors duration-200 ${
+                    activeMenuItem === item.id
+                      ? "bg-blue-600 text-white"
+                      : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                  }`}
+                >
+                  {/* Icons for menu items */}
+                  {item.icon === "clock" && (
+                    <svg
+                      className="mr-3 h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  )}
+                  {item.icon === "calendar" && (
+                    <svg
+                      className="mr-3 h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                  )}
+                  {item.icon === "document" && (
+                    <svg
+                      className="mr-3 h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                      />
+                    </svg>
+                  )}
+                  {item.name}
+                </button>
+              ))}
+            </div>
+          </nav>
+        </div>
+
+        {/* Sidebar overlay for mobile */}
+        {isSidebarOpen && (
+          <div
+            className="fixed inset-0 z-10 bg-black bg-opacity-50 md:hidden"
+            onClick={toggleSidebar}
+          ></div>
+        )}
+
+        {/* Main content */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Main content area */}
+          <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-900 p-6">
+            <div className="max-w-7xl mx-auto">
+              <h2 className="text-2xl font-bold text-white mb-6">
+                {activeMenuItem === "watch" && "Watch"}
+                {activeMenuItem === "timesheet" && "Time Sheet"}
+                {activeMenuItem === "notes" && "Notes"}
+              </h2>
+
+              {/* Content based on active menu item */}
+              <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                {activeMenuItem === "watch" && (
+                  <div className="text-center">
+                    <div className="text-6xl font-mono text-white mb-4">
+                      {new Date().toLocaleTimeString()}
+                    </div>
+                    <p className="text-gray-400">Current time display</p>
+                  </div>
+                )}
+
+                {activeMenuItem === "timesheet" && (
+                  <div>
+                    <h3 className="text-lg font-semibold text-white mb-4">
+                      Time Sheet
+                    </h3>
+                    <p className="text-gray-400">
+                      Time tracking functionality will be implemented here.
+                    </p>
+                  </div>
+                )}
+
+                {activeMenuItem === "notes" && (
+                  <div>
+                    <h3 className="text-lg font-semibold text-white mb-4">
+                      Notes
+                    </h3>
+                    <p className="text-gray-400">
+                      Notes management functionality will be implemented here.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+
+      {/* Click outside handler for user menu */}
+      {isUserMenuOpen && (
+        <div
+          className="fixed inset-0 z-5"
+          onClick={() => setIsUserMenuOpen(false)}
+        ></div>
+      )}
+    </div>
+  );
+}
