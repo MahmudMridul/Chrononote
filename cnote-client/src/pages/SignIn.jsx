@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { apiRequest } from "../api/api";
 
 export default function SignIn() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const handleUsernameChange = (e) => {
     const value = e.target.value;
@@ -33,6 +34,8 @@ export default function SignIn() {
         body
       );
       console.log("User signed in successfully:", response);
+      // Redirect to home/watch after successful sign-in
+      navigate("/home/watch");
     } catch (error) {
       console.error("Error signing in user:", error);
     }
