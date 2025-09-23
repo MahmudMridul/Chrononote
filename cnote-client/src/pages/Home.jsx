@@ -241,14 +241,8 @@ export default function Home() {
           {/* Main content area */}
           <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-900 p-3">
             <div className="max-w-7xl mx-auto">
-              <h2 className="text-2xl font-bold text-white mb-6">
-                {activeMenuItem === "watch" && "Watch"}
-                {activeMenuItem === "timesheet" && "Time Sheet"}
-                {activeMenuItem === "notes" && "Notes"}
-              </h2>
-
               {/* React Router Outlet for nested routes */}
-              <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+              <div className="bg-gray-800 rounded-lg border border-gray-700">
                 <Outlet />
               </div>
             </div>
