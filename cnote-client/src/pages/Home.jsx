@@ -242,7 +242,7 @@ export default function Home() {
           <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-900 p-3">
             <div className="max-w-7xl mx-auto">
               {/* React Router Outlet for nested routes */}
-              <div className="bg-gray-800 rounded-lg border border-gray-700">
+              <div className="bg-gray-900">
                 <Outlet />
               </div>
             </div>
