@@ -1,6 +1,11 @@
-import React from "react";
 import Clock from "../components/Clock";
+import StopWatch from "../components/StopWatch";
 
 export default function Watch() {
-  return <Clock />;
+  return (
+    <div>
+      <Clock />
+      <StopWatch />
+    </div>
+  );
 }
