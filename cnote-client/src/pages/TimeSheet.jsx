@@ -1,12 +1,6 @@
 import React from "react";
+import Table from "../components/Table";
 
 export default function TimeSheet() {
-  return (
-    <div>
-      <h3 className="text-lg font-semibold text-white mb-4">Time Sheet</h3>
-      <p className="text-gray-400">
-        Time tracking functionality will be implemented here.
-      </p>
-    </div>
-  );
+  return <Table />;
 }
