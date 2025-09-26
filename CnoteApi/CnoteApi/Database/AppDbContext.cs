@@ -1,6 +1,5 @@
 ﻿using CnoteApi.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace CnoteApi.Database
 {
@@ -13,6 +12,8 @@ namespace CnoteApi.Database
 
         public DbSet<User> Users { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; } 
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<TimeCard> TimeCards { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -43,6 +44,28 @@ namespace CnoteApi.Database
             {
                 entity.Property(e => e.Id).UseIdentityColumn();
             });
+
+            modelBuilder.Entity<Project>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).UseIdentityColumn();
+                entity.Property(e => e.Name).IsRequired().HasMaxLength(50);
+                entity.HasIndex(e => e.Name).IsUnique();
+                entity.HasMany(e => e.TimeCards)
+                      .WithOne(tc => tc.Project)
+                      .HasForeignKey(tc => tc.ProjectId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<TimeCard>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).UseIdentityColumn();
+                entity.Property(e => e.DurationInMins).IsRequired();
+                entity.Property(e => e.Date).IsRequired();
+                entity.Property(e => e.DayOfWeek).IsRequired().HasMaxLength(10);
+            });
+            // May need to add indexing for Timecard
         }
     }
 }
