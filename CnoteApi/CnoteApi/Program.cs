@@ -23,6 +23,7 @@ namespace CnoteApi
             // Repositories
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            builder.Services.AddScoped<ITimeCardRepository, TimeCardRepository>();
 
             // Services
             builder.Services.AddScoped<AuthValidationService>();
