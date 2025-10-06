@@ -19,18 +19,27 @@ export default function TimesheetEntryModal({ isOpen, onClose }) {
     "Sunday",
   ];
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
+  const handleProjectIdChange = (e) => {
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      projectId: e.target.value,
+    }));
+  };
+
+  const handleDateChange = (e) => {
+    const dateValue = e.target.value;
+    setFormData((prev) => ({
+      ...prev,
+      date: dateValue,
     }));
 
-    // Auto-calculate day of week when date changes
-    if (name === "date" && value) {
-      const selectedDate = new Date(value);
+    // Auto-calculate day of week when date changes (using UTC)
+    if (dateValue) {
+      const selectedDate = new Date(dateValue + "T00:00:00.000Z"); // Force UTC
       const dayOfWeek =
-        daysOfWeek[selectedDate.getDay() === 0 ? 6 : selectedDate.getDay() - 1];
+        daysOfWeek[
+          selectedDate.getUTCDay() === 0 ? 6 : selectedDate.getUTCDay() - 1
+        ];
       setFormData((prev) => ({
         ...prev,
         dayofWeek: dayOfWeek,
@@ -38,23 +47,33 @@ export default function TimesheetEntryModal({ isOpen, onClose }) {
     }
   };
 
+  const handleDurationChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      durationInMins: e.target.value,
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.projectId && formData.date && formData.durationInMins) {
+      // Convert date to UTC format
+      const utcDate = new Date(formData.date + "T00:00:00.000Z").toISOString();
+
       const body = {
         ...formData,
+        date: utcDate,
         durationInMins: parseInt(formData.durationInMins),
       };
       try {
         const response = await apiRequest(
-          "timecard/addtimecard",
+          "timecard/add",
           "POST",
-          true,
+          false,
           false,
           body
         );
-        console.log("User signed in successfully:", response);
-        // Redirect to home/watch after successful sign-in
+        console.log("Timecard created", response);
       } catch (error) {
         console.error("Error while creating time card:", error);
       }
@@ -133,7 +152,7 @@ export default function TimesheetEntryModal({ isOpen, onClose }) {
                 id="projectId"
                 name="projectId"
                 value={formData.projectId}
-                onChange={handleInputChange}
+                onChange={handleProjectIdChange}
                 required
                 min="1"
                 className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -154,7 +173,7 @@ export default function TimesheetEntryModal({ isOpen, onClose }) {
                 id="date"
                 name="date"
                 value={formData.date}
-                onChange={handleInputChange}
+                onChange={handleDateChange}
                 required
                 className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
@@ -192,7 +211,7 @@ export default function TimesheetEntryModal({ isOpen, onClose }) {
                 id="durationInMins"
                 name="durationInMins"
                 value={formData.durationInMins}
-                onChange={handleInputChange}
+                onChange={handleDurationChange}
                 required
                 min="1"
                 className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
