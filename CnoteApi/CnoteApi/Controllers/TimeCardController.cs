@@ -24,7 +24,8 @@ namespace CnoteApi.Controllers
             return Ok(response);
         }
 
-        public async Task<ActionResult<ApiResponse>> AddTimeCard([FromBody] TimeCardDto tcDto)
+        [HttpPost("add")]
+        public async Task<ActionResult<ApiResponse>> Add([FromBody] TimeCardDto tcDto)
         {
             if (!TimeCardValidationService.IsValidTimeCard(tcDto))
             {
