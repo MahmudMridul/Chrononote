@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import { apiRequest } from "../api/api";
 
-export default function TimesheetEntryModal({ isOpen, onClose, onSave }) {
+export default function TimesheetEntryModal({ isOpen, onClose }) {
   const [formData, setFormData] = useState({
     projectId: "",
     date: "",
@@ -37,16 +38,29 @@ export default function TimesheetEntryModal({ isOpen, onClose, onSave }) {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.projectId && formData.date && formData.durationInMins) {
-      const newEntry = {
+      const body = {
         ...formData,
-        id: Date.now(), // Simple ID generation for demo
         durationInMins: parseInt(formData.durationInMins),
       };
-      onSave(newEntry);
+      try {
+        const response = await apiRequest(
+          "timecard/addtimecard",
+          "POST",
+          true,
+          false,
+          body
+        );
+        console.log("User signed in successfully:", response);
+        // Redirect to home/watch after successful sign-in
+      } catch (error) {
+        console.error("Error while creating time card:", error);
+      }
+      console.log("New timesheet entry:", body);
       resetForm();
+      onClose();
     }
   };
 

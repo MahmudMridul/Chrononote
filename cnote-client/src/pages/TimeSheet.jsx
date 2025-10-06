@@ -13,13 +13,6 @@ export default function TimeSheet() {
     setIsModalOpen(false);
   };
 
-  const handleSaveEntry = (newEntry) => {
-    // For now, just log the entry. Later this will be an API call
-    console.log("New timesheet entry:", newEntry);
-    setIsModalOpen(false);
-    // TODO: Add API call to save the entry
-  };
-
   return (
     <div className="relative">
       <div className={`p-4 sm:p-6 ${isModalOpen ? "blur-sm" : ""}`}>
@@ -54,11 +47,7 @@ export default function TimeSheet() {
       </div>
 
       {/* Modal */}
-      <TimesheetEntryModal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        onSave={handleSaveEntry}
-      />
+      <TimesheetEntryModal isOpen={isModalOpen} onClose={handleCloseModal} />
     </div>
   );
 }
