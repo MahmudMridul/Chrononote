@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Watch from "./pages/Watch";
 import TimeSheet from "./pages/TimeSheet";
 import Notes from "./pages/Notes";
+import Project from "./pages/Project";
 
 export const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ export const router = createBrowserRouter([
       {
         path: "timesheet",
         Component: TimeSheet,
+      },
+      {
+        path: "project",        
+        Component: Project,
       },
       {
         path: "notes",
