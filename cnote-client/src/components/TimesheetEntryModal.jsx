@@ -1,6 +1,15 @@
 import React, { useState } from "react";
 import { apiRequest } from "../api/api";
 
+const dummyProjects = [
+  { id: 1, name: "E-commerce Website" },
+  { id: 2, name: "Mobile Banking App" },
+  { id: 3, name: "Inventory Management System" },
+  { id: 4, name: "Customer Support Portal" },
+  { id: 5, name: "Marketing Dashboard" },
+  { id: 6, name: "Employee Management System" },
+];
+
 export default function TimesheetEntryModal({ isOpen, onClose }) {
   const [formData, setFormData] = useState({
     projectId: "",
@@ -139,25 +148,31 @@ export default function TimesheetEntryModal({ isOpen, onClose }) {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Project ID */}
+            {/* Project */}
             <div>
               <label
                 htmlFor="projectId"
                 className="block text-sm font-medium text-white mb-2"
               >
-                Project ID
+                Project
               </label>
-              <input
-                type="number"
+              <select
                 id="projectId"
                 name="projectId"
                 value={formData.projectId}
                 onChange={handleProjectIdChange}
                 required
-                min="1"
-                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Enter project ID"
-              />
+                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="" disabled>
+                  Select a project
+                </option>
+                {dummyProjects.map((project) => (
+                  <option key={project.id} value={project.id}>
+                    {project.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* Date */}
