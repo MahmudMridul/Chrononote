@@ -17,3 +17,7 @@ select
   "Created",
   "UserId"
 from cnote."RefreshTokens";
+
+select
+  "Name"
+from cnote."Projects";
