@@ -35,33 +35,7 @@ namespace CnoteApi.Controllers
             TimeCard newTimeCard = TimeCard.DtoToTimeCard(tcDto);
             await _timeCardRepo.AddTimeCard(newTimeCard);
             ApiResponse resp = ApiResponse.Ok(data: newTimeCard, msg: "Time card created");
-            return Ok(resp);
-        }
-
-
-        // GET api/<TimeCardController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<TimeCardController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<TimeCardController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<TimeCardController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            return Created("", resp);
         }
     }
 }
