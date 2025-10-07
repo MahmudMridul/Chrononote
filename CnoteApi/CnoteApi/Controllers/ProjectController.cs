@@ -16,7 +16,7 @@ namespace CnoteApi.Controllers
             _projectRepo = projectRepo;
         }
 
-        [HttpGet]
+        [HttpGet("all")]
         public async Task<ActionResult<ApiResponse>> GetAll()
         {
             IEnumerable<Project> projects = await _projectRepo.GetAll();

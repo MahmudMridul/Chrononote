@@ -1,18 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AddProjectModal from "../components/AddProjectModal";
-
-const dummyProjects = [
-  { id: 1, name: "E-commerce Website" },
-  { id: 2, name: "Mobile Banking App" },
-  { id: 3, name: "Inventory Management System" },
-  { id: 4, name: "Customer Support Portal" },
-  { id: 5, name: "Marketing Dashboard" },
-  { id: 6, name: "Employee Management System" },
-];
+import { apiRequest } from "../api/api";
+import { useDispatch, useSelector } from "react-redux";
+import { setState } from "../appSlice";
 
 export default function Project() {
-  const [projects, _setProjects] = useState(dummyProjects);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const dispatch = useDispatch();
+  const projects = useSelector((state) => state.app.projects);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await apiRequest("project/all", "GET", false, false);
+        dispatch(setState("projects", response?.data || []));
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+        dispatch(setState("projects", []));
+      } finally {
+        console.log("Fetch projects attempt finished");
+      }
+    };
+
+    fetchProjects();
+  }, []);
 
   const handleAddProject = () => {
     setIsModalOpen(true);
