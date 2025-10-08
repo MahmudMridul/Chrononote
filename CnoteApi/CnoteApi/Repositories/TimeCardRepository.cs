@@ -14,7 +14,7 @@ namespace CnoteApi.Repositories
 
         public async Task<IEnumerable<TimeCard>> GetCurrentWeekTimeCard()
         {
-            DateTime today = DateTime.Today;
+            DateTime today = DateTime.UtcNow.Date;
             int daysFromMonday = (int)today.DayOfWeek - (int)DayOfWeek.Monday;
             if (daysFromMonday < 0) daysFromMonday += 7; // Handle Sunday case
 
@@ -23,7 +23,6 @@ namespace CnoteApi.Repositories
 
             return await _dbContext.TimeCards
                 .AsNoTracking()
-                .Include(tc => tc.Project)
                 .Where(tc => tc.Date >= startOfWeek && tc.Date <= endOfWeek)
                 .OrderBy(tc => tc.Date)
                 .ToListAsync();

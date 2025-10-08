@@ -16,7 +16,7 @@ namespace CnoteApi.Controllers
             _timeCardRepo = timeCardRepo;
         }
 
-        [HttpGet]
+        [HttpGet("currentweek")]
         public async Task<ActionResult<ApiResponse>> GetCurrentWeekTimeCard()
         {
             IEnumerable<TimeCard> currentWeekTimeCards = await _timeCardRepo.GetCurrentWeekTimeCard();
