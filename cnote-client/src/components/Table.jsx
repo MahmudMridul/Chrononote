@@ -1,4 +1,8 @@
+import { useSelector } from "react-redux";
+
 export default function Table() {
+  const timeCards = useSelector((state) => state.app.timeCards);
+
   return (
     <table className="table-auto">
       <thead>
@@ -14,38 +18,38 @@ export default function Table() {
         </tr>
       </thead>
       <tbody>
-        {dummyTimeCards.map((timeCard) => {
+        {timeCards.map((timeCard) => {
           return (
             <tr key={timeCard.id} className="bg-gray-800 text-white">
               <td className="border px-4 py-2">Project {timeCard.projectId}</td>
               <td className="border px-4 py-2">
-                {timeCard.dayofWeek === "Monday" ? timeCard.durationInMins : ""}
+                {timeCard.dayOfWeek === "Monday" ? timeCard.durationInMins : ""}
               </td>
               <td className="border px-4 py-2">
-                {timeCard.dayofWeek === "Tuesday"
+                {timeCard.dayOfWeek === "Tuesday"
                   ? timeCard.durationInMins
                   : ""}
               </td>
               <td className="border px-4 py-2">
-                {timeCard.dayofWeek === "Wednesday"
+                {timeCard.dayOfWeek === "Wednesday"
                   ? timeCard.durationInMins
                   : ""}
               </td>
               <td className="border px-4 py-2">
-                {timeCard.dayofWeek === "Thursday"
+                {timeCard.dayOfWeek === "Thursday"
                   ? timeCard.durationInMins
                   : ""}
               </td>
               <td className="border px-4 py-2">
-                {timeCard.dayofWeek === "Friday" ? timeCard.durationInMins : ""}
+                {timeCard.dayOfWeek === "Friday" ? timeCard.durationInMins : ""}
               </td>
               <td className="border px-4 py-2">
-                {timeCard.dayofWeek === "Saturday"
+                {timeCard.dayOfWeek === "Saturday"
                   ? timeCard.durationInMins
                   : ""}
               </td>
               <td className="border px-4 py-2">
-                {timeCard.dayofWeek === "Sunday" ? timeCard.durationInMins : ""}
+                {timeCard.dayOfWeek === "Sunday" ? timeCard.durationInMins : ""}
               </td>
             </tr>
           );
@@ -54,55 +58,3 @@ export default function Table() {
     </table>
   );
 }
-
-const dummyTimeCards = [
-  {
-    id: 1,
-    durationInMins: 120,
-    date: "2023-10-01",
-    dayofWeek: "Monday",
-    projectId: 1,
-  },
-  {
-    id: 2,
-    durationInMins: 90,
-    date: "2023-10-02",
-    dayofWeek: "Tuesday",
-    projectId: 1,
-  },
-  {
-    id: 3,
-    durationInMins: 60,
-    date: "2023-10-03",
-    dayofWeek: "Wednesday",
-    projectId: 2,
-  },
-  {
-    id: 4,
-    durationInMins: 30,
-    date: "2023-10-04",
-    dayofWeek: "Thursday",
-    projectId: 2,
-  },
-  {
-    id: 5,
-    durationInMins: 45,
-    date: "2023-10-05",
-    dayofWeek: "Friday",
-    projectId: 3,
-  },
-  {
-    id: 6,
-    durationInMins: 150,
-    date: "2023-10-06",
-    dayofWeek: "Saturday",
-    projectId: 3,
-  },
-  {
-    id: 7,
-    durationInMins: 200,
-    date: "2023-10-07",
-    dayofWeek: "Sunday",
-    projectId: 3,
-  },
-];

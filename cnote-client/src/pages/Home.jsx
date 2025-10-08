@@ -3,6 +3,10 @@ import { Outlet, useNavigate, useLocation } from "react-router";
 import { fetchAllProjects } from "../services/projectService";
 import { useDispatch, useSelector } from "react-redux";
 import { setState } from "../appSlice";
+import {
+  convertTimeCardToTableFormat,
+  fetchCurrentWeekTimeCards,
+} from "../services/timecardService";
 
 const menuItems = [
   { id: "watch", name: "Watch", icon: "clock" },
@@ -17,7 +21,7 @@ export default function Home() {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
-  const projects = useSelector((state) => state.app.projects);
+  const { projects, timeCards } = useSelector((state) => state.app);
 
   useEffect(() => {
     if (projects.length === 0) {
@@ -27,6 +31,18 @@ export default function Home() {
         })
         .catch((error) => {
           console.error("Error fetching projects on home page load:", error);
+        });
+    }
+
+    if (timeCards.length === 0) {
+      fetchCurrentWeekTimeCards()
+        .then((timeCards) => {
+          dispatch(setState("timeCards", timeCards));
+          const formattedTimeCards = convertTimeCardToTableFormat(timeCards);
+          dispatch(setState("tableTimeCards", formattedTimeCards));
+        })
+        .catch((error) => {
+          console.error("Error fetching time cards on home page load:", error);
         });
     }
   }, []);
