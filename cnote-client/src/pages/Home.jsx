@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router";
+import { fetchAllProjects } from "../services/projectService";
+import { useDispatch, useSelector } from "react-redux";
+import { setState } from "../appSlice";
 
 const menuItems = [
   { id: "watch", name: "Watch", icon: "clock" },
@@ -13,6 +16,20 @@ export default function Home() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
+  const projects = useSelector((state) => state.app.projects);
+
+  useEffect(() => {
+    if (projects.length === 0) {
+      fetchAllProjects()
+        .then((projects) => {
+          dispatch(setState("projects", projects));
+        })
+        .catch((error) => {
+          console.error("Error fetching projects on home page load:", error);
+        });
+    }
+  }, []);
 
   // Mock username - in real app, this would come from auth context
   const username = "JohnDoe";

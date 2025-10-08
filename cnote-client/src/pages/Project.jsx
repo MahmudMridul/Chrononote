@@ -1,18 +1,10 @@
 import React, { useState } from "react";
 import AddProjectModal from "../components/AddProjectModal";
-
-const dummyProjects = [
-  { id: 1, name: "E-commerce Website" },
-  { id: 2, name: "Mobile Banking App" },
-  { id: 3, name: "Inventory Management System" },
-  { id: 4, name: "Customer Support Portal" },
-  { id: 5, name: "Marketing Dashboard" },
-  { id: 6, name: "Employee Management System" },
-];
+import { useSelector } from "react-redux";
 
 export default function Project() {
-  const [projects, _setProjects] = useState(dummyProjects);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const projects = useSelector((state) => state.app.projects);
 
   const handleAddProject = () => {
     setIsModalOpen(true);

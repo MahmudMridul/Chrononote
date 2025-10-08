@@ -1,14 +1,6 @@
 import React, { useState } from "react";
 import { apiRequest } from "../api/api";
-
-const dummyProjects = [
-  { id: 1, name: "E-commerce Website" },
-  { id: 2, name: "Mobile Banking App" },
-  { id: 3, name: "Inventory Management System" },
-  { id: 4, name: "Customer Support Portal" },
-  { id: 5, name: "Marketing Dashboard" },
-  { id: 6, name: "Employee Management System" },
-];
+import { useSelector } from "react-redux";
 
 export default function TimesheetEntryModal({ isOpen, onClose }) {
   const [formData, setFormData] = useState({
@@ -17,6 +9,8 @@ export default function TimesheetEntryModal({ isOpen, onClose }) {
     durationInMins: "",
     dayofWeek: "",
   });
+
+  const projects = useSelector((state) => state.app.projects);
 
   const daysOfWeek = [
     "Monday",
@@ -74,6 +68,7 @@ export default function TimesheetEntryModal({ isOpen, onClose }) {
         date: utcDate,
         durationInMins: parseInt(formData.durationInMins),
       };
+      console.log("Submitting form with data:", body);
       try {
         const response = await apiRequest(
           "timecard/add",
@@ -86,7 +81,6 @@ export default function TimesheetEntryModal({ isOpen, onClose }) {
       } catch (error) {
         console.error("Error while creating time card:", error);
       }
-      console.log("New timesheet entry:", body);
       resetForm();
       onClose();
     }
@@ -167,7 +161,7 @@ export default function TimesheetEntryModal({ isOpen, onClose }) {
                 <option value="" disabled>
                   Select a project
                 </option>
-                {dummyProjects.map((project) => (
+                {projects.map((project) => (
                   <option key={project.id} value={project.id}>
                     {project.name}
                   </option>
