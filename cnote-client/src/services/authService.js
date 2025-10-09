@@ -29,6 +29,11 @@ const setAccessTokenDataToLocalStorage = (token, tokenExpiresAt) => {
   localStorage.setItem("accessTokenExpiresAt", tokenExpiresAt);
 };
 
+const removeAccessTokenDataFromLocalStorage = () => {
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("accessTokenExpiresAt");
+};
+
 const setUserDataToLocalStorage = (user) => {
   localStorage.setItem("user", JSON.stringify(user));
 };
@@ -47,8 +52,23 @@ export const removeUserDataFromLocalStorage = () => {
   localStorage.removeItem("user");
 };
 
-export const isUserLoggedIn = () => {
+export const isAuthenticatedUser = () => {
   const token = localStorage.getItem("accessToken");
+  const tokenExpiresAt = localStorage.getItem("accessTokenExpiresAt");
   const user = getUserDataFromLocalStorage();
-  return !!(token && user);
+
+  if (!token || !tokenExpiresAt || !user) {
+    return false;
+  }
+
+  const currentTime = new Date().getTime();
+  const expirationTime = new Date(tokenExpiresAt).getTime();
+
+  if (currentTime >= expirationTime) {
+    removeAccessTokenDataFromLocalStorage();
+    removeUserDataFromLocalStorage();
+    return false;
+  }
+
+  return true;
 };
