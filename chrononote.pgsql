@@ -21,3 +21,8 @@ from cnote."RefreshTokens";
 select
   "Name"
 from cnote."Projects";
+
+select 
+  *
+from cnote."TimeCards"
+order by "ProjectId";

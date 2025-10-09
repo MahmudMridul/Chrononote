@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { apiRequest } from "../api/api";
+import { signIn } from "../services/authService";
 
 export default function SignIn() {
   const [username, setUsername] = useState("");
@@ -25,19 +25,11 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const body = { username, password };
-    try {
-      const response = await apiRequest(
-        "auth/signin",
-        "POST",
-        true,
-        false,
-        body
-      );
-      console.log("User signed in successfully:", response);
-      // Redirect to home/watch after successful sign-in
+    const isAuthenticated = await signIn(body);
+    if (isAuthenticated) {
       navigate("/home/watch");
-    } catch (error) {
-      console.error("Error signing in user:", error);
+    } else {
+      navigate("/signin");
     }
   };
 

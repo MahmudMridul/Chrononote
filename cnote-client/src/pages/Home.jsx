@@ -7,6 +7,7 @@ import {
   convertTimeCardToTableFormat,
   fetchCurrentWeekTimeCards,
 } from "../services/timecardService";
+import { getUserDataFromLocalStorage } from "../services/authService";
 
 const menuItems = [
   { id: "watch", name: "Watch", icon: "clock" },
@@ -22,6 +23,7 @@ export default function Home() {
   const location = useLocation();
   const dispatch = useDispatch();
   const { projects, timeCards } = useSelector((state) => state.app);
+  const user = getUserDataFromLocalStorage();
 
   useEffect(() => {
     if (projects.length === 0) {
@@ -46,9 +48,6 @@ export default function Home() {
         });
     }
   }, []);
-
-  // Mock username - in real app, this would come from auth context
-  const username = "JohnDoe";
 
   // Get active menu item from current route
   const getActiveMenuItem = () => {
@@ -130,7 +129,7 @@ export default function Home() {
               onClick={toggleUserMenu}
               className="flex items-center text-sm font-medium text-white hover:text-gray-300 focus:outline-none focus:text-gray-300 transition-colors duration-200"
             >
-              <span className="mr-2">{username}</span>
+              <span className="mr-2">{user?.username}</span>
               <svg
                 className="h-4 w-4"
                 fill="none"
