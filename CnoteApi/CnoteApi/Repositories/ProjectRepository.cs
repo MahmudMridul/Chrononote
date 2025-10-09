@@ -12,9 +12,9 @@ namespace CnoteApi.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<Project>> GetAll()
+        public async Task<IEnumerable<Project>> GetAll(int userId)
         {
-            return await _dbContext.Projects.ToListAsync();
+            return await _dbContext.Projects.Where(p => p.UserId == userId).ToListAsync();
         }
 
         public async Task<Project> Add(Project project)

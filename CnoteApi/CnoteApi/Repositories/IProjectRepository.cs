@@ -5,7 +5,7 @@ namespace CnoteApi.Repositories
 {
     public interface IProjectRepository
     {
-        Task<IEnumerable<Project>> GetAll();
+        Task<IEnumerable<Project>> GetAll(int userId);
         Task<Project> Add(Project project);
         Task<Project?> Delete(int id);
         //Task<Project> Update(int id, Project project);
