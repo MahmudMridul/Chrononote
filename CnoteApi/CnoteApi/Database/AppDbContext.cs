@@ -38,6 +38,16 @@ namespace CnoteApi.Database
 
                 entity.HasIndex(e => e.Username).IsUnique();
                 entity.HasIndex(e => e.Email).IsUnique();
+
+                entity.HasMany(e => e.Projects)
+                      .WithOne(p => p.User)
+                      .HasForeignKey(p => p.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasMany(e => e.TimeCards)
+                      .WithOne(p => p.User)
+                      .HasForeignKey(p => p.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<RefreshToken>(entity => 

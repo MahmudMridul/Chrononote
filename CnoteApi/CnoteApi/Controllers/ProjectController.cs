@@ -16,10 +16,10 @@ namespace CnoteApi.Controllers
             _projectRepo = projectRepo;
         }
 
-        [HttpGet("all")]
-        public async Task<ActionResult<ApiResponse>> GetAll()
+        [HttpPost("all")]
+        public async Task<ActionResult<ApiResponse>> GetAll([FromBody] int userId)
         {
-            IEnumerable<Project> projects = await _projectRepo.GetAll();
+            IEnumerable<Project> projects = await _projectRepo.GetAll(userId);
             ApiResponse res = ApiResponse.Ok(data: projects, msg: "Success");
             return Ok(res);
         }
@@ -29,7 +29,8 @@ namespace CnoteApi.Controllers
         {
             Project newProject = new Project
             {
-                Name = projectDto.Name
+                Name = projectDto.Name,
+                UserId = projectDto.UserId
             };
             Project addedProject = await _projectRepo.Add(newProject);
             ApiResponse res = ApiResponse.Created(data: addedProject, msg: "Project created successfully");

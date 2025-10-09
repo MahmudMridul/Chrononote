@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { apiRequest } from "../api/api";
+import { getUserDataFromLocalStorage } from "../services/authService";
 
 export default function AddProjectModal({ isOpen, onClose }) {
   const [formData, setFormData] = useState({
@@ -16,8 +17,10 @@ export default function AddProjectModal({ isOpen, onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.name.trim()) {
+      const user = getUserDataFromLocalStorage();
       const body = {
         name: formData.name.trim(),
+        userId: user?.id,
       };
       try {
         const response = await apiRequest(

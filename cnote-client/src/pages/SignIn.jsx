@@ -29,7 +29,7 @@ export default function SignIn() {
     if (isAuthenticated) {
       navigate("/home/watch");
     } else {
-      navigate("/signin");
+      navigate("/");
     }
   };
 

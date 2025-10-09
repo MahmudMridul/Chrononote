@@ -27,7 +27,7 @@ export default function Home() {
 
   useEffect(() => {
     if (projects.length === 0) {
-      fetchAllProjects()
+      fetchAllProjects(user?.id)
         .then((projects) => {
           dispatch(setState("projects", projects));
         })
