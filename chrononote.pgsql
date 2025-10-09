@@ -19,7 +19,7 @@ select
 from cnote."RefreshTokens";
 
 select
-  "Name"
+  *
 from cnote."Projects";
 
 select 
