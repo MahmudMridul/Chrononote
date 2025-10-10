@@ -15,7 +15,7 @@ namespace CnoteApi.Services
 
         public static IList<CurrentWeekTimeCardDto> ConvertToTableFormat(IList<TimeCard> timeCards)
         {
-            timeCards.OrderBy(tc => tc.ProjectId);
+            timeCards = timeCards.OrderBy(tc => tc.ProjectId).ToList();
             IList<CurrentWeekTimeCardDto> tableFormat = new List<CurrentWeekTimeCardDto>();
             CurrentWeekTimeCardDto firstItem = ToCurrentWeekTimeCardDto(timeCards[0]);
             SetDayOfWeek(firstItem, timeCards[0]);
