@@ -9,13 +9,13 @@ export default function Table() {
       <thead>
         <tr className="text-white">
           <th className="px-4 py-2">Project</th>
+          <th className="px-4 py-2">Sunday</th>
           <th className="px-4 py-2">Monday</th>
           <th className="px-4 py-2">Tuesday</th>
           <th className="px-4 py-2">Wednesday</th>
           <th className="px-4 py-2">Thursday</th>
           <th className="px-4 py-2">Friday</th>
           <th className="px-4 py-2">Saturday</th>
-          <th className="px-4 py-2">Sunday</th>
         </tr>
       </thead>
       <tbody>
@@ -26,33 +26,25 @@ export default function Table() {
                 {getProjectName(projects, timeCard.projectId)}
               </td>
               <td className="border px-4 py-2">
-                {timeCard.dayOfWeek === "Monday" ? timeCard.durationInMins : ""}
+                {timeCard.sunMins ? timeCard.sunMins : 0}
               </td>
               <td className="border px-4 py-2">
-                {timeCard.dayOfWeek === "Tuesday"
-                  ? timeCard.durationInMins
-                  : ""}
+                {timeCard.monMins ? timeCard.monMins : 0}
               </td>
               <td className="border px-4 py-2">
-                {timeCard.dayOfWeek === "Wednesday"
-                  ? timeCard.durationInMins
-                  : ""}
+                {timeCard.tueMins ? timeCard.tueMins : 0}
               </td>
               <td className="border px-4 py-2">
-                {timeCard.dayOfWeek === "Thursday"
-                  ? timeCard.durationInMins
-                  : ""}
+                {timeCard.wedMins ? timeCard.wedMins : 0}
               </td>
               <td className="border px-4 py-2">
-                {timeCard.dayOfWeek === "Friday" ? timeCard.durationInMins : ""}
+                {timeCard.thuMins ? timeCard.thuMins : 0}
               </td>
               <td className="border px-4 py-2">
-                {timeCard.dayOfWeek === "Saturday"
-                  ? timeCard.durationInMins
-                  : ""}
+                {timeCard.friMins ? timeCard.friMins : 0}
               </td>
               <td className="border px-4 py-2">
-                {timeCard.dayOfWeek === "Sunday" ? timeCard.durationInMins : ""}
+                {timeCard.satMins ? timeCard.satMins : 0}
               </td>
             </tr>
           );

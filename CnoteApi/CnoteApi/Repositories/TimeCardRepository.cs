@@ -1,5 +1,7 @@
 ﻿using CnoteApi.Database;
+using CnoteApi.Dtos;
 using CnoteApi.Models;
+using CnoteApi.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace CnoteApi.Repositories
@@ -12,20 +14,18 @@ namespace CnoteApi.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<TimeCard>> GetCurrentWeekTimeCard(int userId)
+        public async Task<IList<CurrentWeekTimeCardDto>> GetCurrentWeekTimeCard(int userId)
         {
-            DateTime today = DateTime.UtcNow.Date;
-            int daysFromMonday = (int)today.DayOfWeek - (int)DayOfWeek.Monday;
-            if (daysFromMonday < 0) daysFromMonday += 7; // Handle Sunday case
+            DateTime[] startAndEnd = TimeCardService.GetStartAndEndOfWeek();
+            DateTime startOfWeek = startAndEnd[0];
+            DateTime endOfWeek = startAndEnd[1];
 
-            var startOfWeek = today.AddDays(-daysFromMonday);
-            var endOfWeek = startOfWeek.AddDays(6);
-
-            return await _dbContext.TimeCards
+            IList<TimeCard> timeCards = await _dbContext.TimeCards
                 .AsNoTracking()
                 .Where(tc => tc.Date >= startOfWeek && tc.Date <= endOfWeek && tc.UserId == userId)
-                .OrderBy(tc => tc.Date)
                 .ToListAsync();
+
+            return TimeCardService.ConvertToTableFormat(timeCards);
         }
 
         public async Task<TimeCard> AddTimeCard(TimeCard timeCard)
@@ -36,7 +36,6 @@ namespace CnoteApi.Repositories
             if (existingTimeCard is null)
             {
                 await _dbContext.TimeCards.AddAsync(timeCard);
-                
             }
             else
             {

@@ -19,7 +19,7 @@ namespace CnoteApi.Controllers
         [HttpPost("currentweek")]
         public async Task<ActionResult<ApiResponse>> GetCurrentWeekTimeCard([FromBody] int userId)
         {
-            IEnumerable<TimeCard> currentWeekTimeCards = await _timeCardRepo.GetCurrentWeekTimeCard(userId);
+            IList<CurrentWeekTimeCardDto> currentWeekTimeCards = await _timeCardRepo.GetCurrentWeekTimeCard(userId);
             ApiResponse response = ApiResponse.Ok(data: currentWeekTimeCards, msg: "Success");
             return Ok(response);
         }
