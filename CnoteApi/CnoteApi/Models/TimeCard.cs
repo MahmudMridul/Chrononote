@@ -20,6 +20,7 @@ namespace CnoteApi.Models
                 DurationInMins = dto.DurationInMins,
                 Date = dto.Date,
                 DayOfWeek = dto.DayOfWeek,
+                UserId = dto.UserId,
                 ProjectId = dto.ProjectId,
             };
         }

@@ -16,10 +16,10 @@ namespace CnoteApi.Controllers
             _timeCardRepo = timeCardRepo;
         }
 
-        [HttpGet("currentweek")]
-        public async Task<ActionResult<ApiResponse>> GetCurrentWeekTimeCard()
+        [HttpPost("currentweek")]
+        public async Task<ActionResult<ApiResponse>> GetCurrentWeekTimeCard([FromBody] int userId)
         {
-            IEnumerable<TimeCard> currentWeekTimeCards = await _timeCardRepo.GetCurrentWeekTimeCard();
+            IEnumerable<TimeCard> currentWeekTimeCards = await _timeCardRepo.GetCurrentWeekTimeCard(userId);
             ApiResponse response = ApiResponse.Ok(data: currentWeekTimeCards, msg: "Success");
             return Ok(response);
         }
@@ -34,7 +34,7 @@ namespace CnoteApi.Controllers
             }
             TimeCard newTimeCard = TimeCard.DtoToTimeCard(tcDto);
             await _timeCardRepo.AddTimeCard(newTimeCard);
-            ApiResponse resp = ApiResponse.Ok(data: newTimeCard, msg: "Time card created");
+            ApiResponse resp = ApiResponse.Created(data: newTimeCard, msg: "Time card created");
             return Created("", resp);
         }
     }

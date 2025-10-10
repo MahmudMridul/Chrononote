@@ -26,3 +26,5 @@ select
   *
 from cnote."TimeCards"
 order by "ProjectId";
+
+delete from cnote."TimeCards";

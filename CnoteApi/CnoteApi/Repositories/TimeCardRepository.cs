@@ -12,7 +12,7 @@ namespace CnoteApi.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<TimeCard>> GetCurrentWeekTimeCard()
+        public async Task<IEnumerable<TimeCard>> GetCurrentWeekTimeCard(int userId)
         {
             DateTime today = DateTime.UtcNow.Date;
             int daysFromMonday = (int)today.DayOfWeek - (int)DayOfWeek.Monday;
@@ -23,14 +23,26 @@ namespace CnoteApi.Repositories
 
             return await _dbContext.TimeCards
                 .AsNoTracking()
-                .Where(tc => tc.Date >= startOfWeek && tc.Date <= endOfWeek)
+                .Where(tc => tc.Date >= startOfWeek && tc.Date <= endOfWeek && tc.UserId == userId)
                 .OrderBy(tc => tc.Date)
                 .ToListAsync();
         }
 
         public async Task<TimeCard> AddTimeCard(TimeCard timeCard)
         {
-            await _dbContext.TimeCards.AddAsync(timeCard);
+            TimeCard? existingTimeCard = await _dbContext.TimeCards
+                .FirstOrDefaultAsync(tc => tc.Date == timeCard.Date && tc.UserId == timeCard.UserId && tc.ProjectId == timeCard.ProjectId);
+
+            if (existingTimeCard is null)
+            {
+                await _dbContext.TimeCards.AddAsync(timeCard);
+                
+            }
+            else
+            {
+                existingTimeCard.DurationInMins += timeCard.DurationInMins;
+                _dbContext.TimeCards.Update(existingTimeCard);
+            }
             await _dbContext.SaveChangesAsync();
             return timeCard;
         }

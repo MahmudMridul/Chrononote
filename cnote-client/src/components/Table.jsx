@@ -1,7 +1,8 @@
 import { useSelector } from "react-redux";
+import { getProjectName } from "../services/projectService";
 
 export default function Table() {
-  const timeCards = useSelector((state) => state.app.timeCards);
+  const { timeCards, projects } = useSelector((state) => state.app);
 
   return (
     <table className="table-auto">
@@ -21,7 +22,9 @@ export default function Table() {
         {timeCards.map((timeCard) => {
           return (
             <tr key={timeCard.id} className="bg-gray-800 text-white">
-              <td className="border px-4 py-2">Project {timeCard.projectId}</td>
+              <td className="border px-4 py-2">
+                {getProjectName(projects, timeCard.projectId)}
+              </td>
               <td className="border px-4 py-2">
                 {timeCard.dayOfWeek === "Monday" ? timeCard.durationInMins : ""}
               </td>
