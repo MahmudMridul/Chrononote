@@ -9,3 +9,8 @@ export const fetchAllProjects = async (userId) => {
     return [];
   }
 };
+
+export const getProjectName = (projects, projectId) => {
+  const project = projects.find((proj) => proj.id === projectId);
+  return project ? project.name : "Unknown Project";
+};

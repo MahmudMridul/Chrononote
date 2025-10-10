@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { apiRequest } from "../api/api";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserDataFromLocalStorage } from "../services/authService";
+import { fetchCurrentWeekTimeCards } from "../services/timecardService";
+import { setState } from "../appSlice";
 
 export default function TimesheetEntryModal({ isOpen, onClose }) {
   const [formData, setFormData] = useState({
@@ -10,6 +13,7 @@ export default function TimesheetEntryModal({ isOpen, onClose }) {
     dayofWeek: "",
   });
 
+  const dispatch = useDispatch();
   const projects = useSelector((state) => state.app.projects);
 
   const daysOfWeek = [
@@ -60,15 +64,15 @@ export default function TimesheetEntryModal({ isOpen, onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.projectId && formData.date && formData.durationInMins) {
-      // Convert date to UTC format
       const utcDate = new Date(formData.date + "T00:00:00.000Z").toISOString();
-
+      const user = getUserDataFromLocalStorage();
       const body = {
         ...formData,
         date: utcDate,
         durationInMins: parseInt(formData.durationInMins),
+        userId: user?.id,
       };
-      console.log("Submitting form with data:", body);
+
       try {
         const response = await apiRequest(
           "timecard/add",
@@ -77,7 +81,11 @@ export default function TimesheetEntryModal({ isOpen, onClose }) {
           false,
           body
         );
-        console.log("Timecard created", response);
+
+        if (response?.statusCode === 201) {
+          const data = await fetchCurrentWeekTimeCards(user?.id);
+          dispatch(setState("timeCards", data));
+        }
       } catch (error) {
         console.error("Error while creating time card:", error);
       }

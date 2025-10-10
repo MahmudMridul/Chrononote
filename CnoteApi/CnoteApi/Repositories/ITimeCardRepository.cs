@@ -1,10 +1,11 @@
-﻿using CnoteApi.Models;
+﻿using CnoteApi.Dtos;
+using CnoteApi.Models;
 
 namespace CnoteApi.Repositories
 {
     public interface ITimeCardRepository
     {
-        public Task<IEnumerable<TimeCard>> GetCurrentWeekTimeCard();
+        public Task<IList<CurrentWeekTimeCardDto>> GetCurrentWeekTimeCard(int userId);
         public Task<TimeCard> AddTimeCard(TimeCard timeCard);
     }
 }

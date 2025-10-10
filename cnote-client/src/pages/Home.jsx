@@ -37,7 +37,8 @@ export default function Home() {
     }
 
     if (timeCards.length === 0) {
-      fetchCurrentWeekTimeCards()
+      console.log(user?.id);
+      fetchCurrentWeekTimeCards(user?.id)
         .then((timeCards) => {
           dispatch(setState("timeCards", timeCards));
           const formattedTimeCards = convertTimeCardToTableFormat(timeCards);
