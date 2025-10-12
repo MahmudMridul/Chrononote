@@ -6,6 +6,7 @@ const initialState = {
   timeCards: [],
   tableTimeCards: [],
   noteContent: "",
+  notes: [],
 };
 
 export const appSlice = createSlice({
