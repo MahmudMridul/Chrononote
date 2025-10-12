@@ -24,6 +24,8 @@ namespace CnoteApi.Repositories
                 .AsNoTracking()
                 .Where(tc => tc.Date >= startOfWeek && tc.Date <= endOfWeek && tc.UserId == userId)
                 .ToListAsync();
+            
+            if (timeCards.Count == 0) return new List<CurrentWeekTimeCardDto>();
 
             return TimeCardService.ConvertToTableFormat(timeCards);
         }
