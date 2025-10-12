@@ -29,6 +29,7 @@ namespace CnoteApi.Controllers
         {
             Note note = new Note
             {
+                Title = noteDto.Title,
                 Content = noteDto.Content,
                 UserId = noteDto.UserId,
                 CreatedAt = DateTime.UtcNow
