@@ -1,20 +1,46 @@
 import { EditorContent, useEditor } from "@tiptap/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setState } from "../appSlice";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 
-const MenuBar = ({ editor }) => {
+const MenuBar = ({ editor, isEditable, onEdit, onSave }) => {
   if (!editor) {
     return null;
   }
 
   return (
     <div className="border-b border-gray-700 bg-gray-800 p-2 flex flex-wrap gap-1">
+      {/* Save/Edit Controls */}
+      <div className="flex gap-1 mr-4">
+        {!isEditable ? (
+          <button
+            onClick={onEdit}
+            className="px-4 py-1 rounded text-sm font-medium transition-colors bg-green-700 text-white hover:bg-green-600"
+          >
+            Edit
+          </button>
+        ) : (
+          <button
+            onClick={onSave}
+            className="px-4 py-1 rounded text-sm font-medium transition-colors bg-blue-700 text-white hover:bg-blue-600"
+          >
+            Save
+          </button>
+        )}
+      </div>
+
+      <div className="w-px h-6 bg-gray-600 mx-1"></div>
+
       {/* Text Formatting */}
       <button
         onClick={() => editor.chain().focus().toggleBold().run()}
+        disabled={!isEditable}
         className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-          editor.isActive("bold")
+          !isEditable
+            ? "bg-gray-600 text-gray-500 cursor-not-allowed"
+            : editor.isActive("bold")
             ? "bg-blue-600 text-white"
             : "bg-gray-700 text-gray-300 hover:bg-gray-600"
         }`}
@@ -23,8 +49,11 @@ const MenuBar = ({ editor }) => {
       </button>
       <button
         onClick={() => editor.chain().focus().toggleItalic().run()}
+        disabled={!isEditable}
         className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-          editor.isActive("italic")
+          !isEditable
+            ? "bg-gray-600 text-gray-500 cursor-not-allowed"
+            : editor.isActive("italic")
             ? "bg-blue-600 text-white"
             : "bg-gray-700 text-gray-300 hover:bg-gray-600"
         }`}
@@ -33,8 +62,11 @@ const MenuBar = ({ editor }) => {
       </button>
       <button
         onClick={() => editor.chain().focus().toggleUnderline().run()}
+        disabled={!isEditable}
         className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-          editor.isActive("underline")
+          !isEditable
+            ? "bg-gray-600 text-gray-500 cursor-not-allowed"
+            : editor.isActive("underline")
             ? "bg-blue-600 text-white"
             : "bg-gray-700 text-gray-300 hover:bg-gray-600"
         }`}
@@ -43,8 +75,11 @@ const MenuBar = ({ editor }) => {
       </button>
       <button
         onClick={() => editor.chain().focus().toggleStrike().run()}
+        disabled={!isEditable}
         className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-          editor.isActive("strike")
+          !isEditable
+            ? "bg-gray-600 text-gray-500 cursor-not-allowed"
+            : editor.isActive("strike")
             ? "bg-blue-600 text-white"
             : "bg-gray-700 text-gray-300 hover:bg-gray-600"
         }`}
@@ -57,8 +92,11 @@ const MenuBar = ({ editor }) => {
       {/* Headings */}
       <button
         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+        disabled={!isEditable}
         className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-          editor.isActive("heading", { level: 1 })
+          !isEditable
+            ? "bg-gray-600 text-gray-500 cursor-not-allowed"
+            : editor.isActive("heading", { level: 1 })
             ? "bg-blue-600 text-white"
             : "bg-gray-700 text-gray-300 hover:bg-gray-600"
         }`}
@@ -67,8 +105,11 @@ const MenuBar = ({ editor }) => {
       </button>
       <button
         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+        disabled={!isEditable}
         className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-          editor.isActive("heading", { level: 2 })
+          !isEditable
+            ? "bg-gray-600 text-gray-500 cursor-not-allowed"
+            : editor.isActive("heading", { level: 2 })
             ? "bg-blue-600 text-white"
             : "bg-gray-700 text-gray-300 hover:bg-gray-600"
         }`}
@@ -77,8 +118,11 @@ const MenuBar = ({ editor }) => {
       </button>
       <button
         onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+        disabled={!isEditable}
         className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-          editor.isActive("heading", { level: 3 })
+          !isEditable
+            ? "bg-gray-600 text-gray-500 cursor-not-allowed"
+            : editor.isActive("heading", { level: 3 })
             ? "bg-blue-600 text-white"
             : "bg-gray-700 text-gray-300 hover:bg-gray-600"
         }`}
@@ -87,8 +131,11 @@ const MenuBar = ({ editor }) => {
       </button>
       <button
         onClick={() => editor.chain().focus().setParagraph().run()}
+        disabled={!isEditable}
         className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-          editor.isActive("paragraph")
+          !isEditable
+            ? "bg-gray-600 text-gray-500 cursor-not-allowed"
+            : editor.isActive("paragraph")
             ? "bg-blue-600 text-white"
             : "bg-gray-700 text-gray-300 hover:bg-gray-600"
         }`}
@@ -101,8 +148,11 @@ const MenuBar = ({ editor }) => {
       {/* Lists */}
       <button
         onClick={() => editor.chain().focus().toggleBulletList().run()}
+        disabled={!isEditable}
         className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-          editor.isActive("bulletList")
+          !isEditable
+            ? "bg-gray-600 text-gray-500 cursor-not-allowed"
+            : editor.isActive("bulletList")
             ? "bg-blue-600 text-white"
             : "bg-gray-700 text-gray-300 hover:bg-gray-600"
         }`}
@@ -111,8 +161,11 @@ const MenuBar = ({ editor }) => {
       </button>
       <button
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
+        disabled={!isEditable}
         className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-          editor.isActive("orderedList")
+          !isEditable
+            ? "bg-gray-600 text-gray-500 cursor-not-allowed"
+            : editor.isActive("orderedList")
             ? "bg-blue-600 text-white"
             : "bg-gray-700 text-gray-300 hover:bg-gray-600"
         }`}
@@ -125,8 +178,11 @@ const MenuBar = ({ editor }) => {
       {/* Other formatting */}
       <button
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
+        disabled={!isEditable}
         className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-          editor.isActive("blockquote")
+          !isEditable
+            ? "bg-gray-600 text-gray-500 cursor-not-allowed"
+            : editor.isActive("blockquote")
             ? "bg-blue-600 text-white"
             : "bg-gray-700 text-gray-300 hover:bg-gray-600"
         }`}
@@ -135,8 +191,11 @@ const MenuBar = ({ editor }) => {
       </button>
       <button
         onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+        disabled={!isEditable}
         className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-          editor.isActive("codeBlock")
+          !isEditable
+            ? "bg-gray-600 text-gray-500 cursor-not-allowed"
+            : editor.isActive("codeBlock")
             ? "bg-blue-600 text-white"
             : "bg-gray-700 text-gray-300 hover:bg-gray-600"
         }`}
@@ -149,15 +208,23 @@ const MenuBar = ({ editor }) => {
       {/* Undo/Redo */}
       <button
         onClick={() => editor.chain().focus().undo().run()}
-        disabled={!editor.can().chain().focus().undo().run()}
-        className="px-3 py-1 rounded text-sm font-medium transition-colors bg-gray-700 text-gray-300 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled={!isEditable || !editor.can().chain().focus().undo().run()}
+        className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
+          !isEditable || !editor.can().chain().focus().undo().run()
+            ? "bg-gray-600 text-gray-500 cursor-not-allowed"
+            : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+        }`}
       >
         Undo
       </button>
       <button
         onClick={() => editor.chain().focus().redo().run()}
-        disabled={!editor.can().chain().focus().redo().run()}
-        className="px-3 py-1 rounded text-sm font-medium transition-colors bg-gray-700 text-gray-300 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled={!isEditable || !editor.can().chain().focus().redo().run()}
+        className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
+          !isEditable || !editor.can().chain().focus().redo().run()
+            ? "bg-gray-600 text-gray-500 cursor-not-allowed"
+            : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+        }`}
       >
         Redo
       </button>
@@ -166,9 +233,14 @@ const MenuBar = ({ editor }) => {
 };
 
 export default function Notepad() {
+  const dispatch = useDispatch();
+  const noteContent = useSelector((state) => state.app.noteContent);
+  const [isEditable, setIsEditable] = useState(false);
+
   const editor = useEditor({
     extensions: [StarterKit, Underline],
-    content: `<p>Start writing your notes here...</p>`,
+    content: noteContent || `<p>Start writing your notes here...</p>`,
+    editable: isEditable,
     editorProps: {
       attributes: {
         class:
@@ -176,6 +248,30 @@ export default function Notepad() {
       },
     },
   });
+
+  // Update editor content when Redux state changes
+  useEffect(() => {
+    if (editor && noteContent && editor.getHTML() !== noteContent) {
+      editor.commands.setContent(noteContent);
+    }
+  }, [editor, noteContent]);
+
+  const handleEdit = () => {
+    setIsEditable(true);
+    if (editor) {
+      editor.setEditable(true);
+      editor.commands.focus();
+    }
+  };
+
+  const handleSave = () => {
+    if (editor) {
+      const content = editor.getHTML();
+      dispatch(setState("noteContent", content));
+      setIsEditable(false);
+      editor.setEditable(false);
+    }
+  };
 
   useEffect(() => {
     // Add custom styles for better formatting visibility
@@ -192,6 +288,12 @@ export default function Notepad() {
           padding: 1rem !important;
           min-height: 500px !important;
           outline: none !important;
+        }
+        
+        .ProseMirror[contenteditable="false"] {
+          background-color: #111827 !important;
+          border-color: #1f2937 !important;
+          cursor: default !important;
         }
         
         .ProseMirror:focus {
@@ -339,7 +441,12 @@ export default function Notepad() {
   return (
     <div className="bg-gray-900 text-white min-h-screen">
       <div className="max-w-4xl mx-auto">
-        <MenuBar editor={editor} />
+        <MenuBar
+          editor={editor}
+          isEditable={isEditable}
+          onEdit={handleEdit}
+          onSave={handleSave}
+        />
         <div className="p-6">
           <EditorContent editor={editor} className="tiptap-editor" />
         </div>

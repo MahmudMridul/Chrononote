@@ -1,28 +1,29 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   user: null,
   projects: [],
   timeCards: [],
   tableTimeCards: [],
-}
+  noteContent: "",
+};
 
 export const appSlice = createSlice({
-  name: 'app',
+  name: "app",
   initialState,
   reducers: {
     setState: {
       prepare: (key, value) => {
-        return { payload: { key, value } }
+        return { payload: { key, value } };
       },
       reducer: (state, action) => {
-        const { key, value } = action.payload
+        const { key, value } = action.payload;
         state[key] = value;
-      }
-    }
+      },
+    },
   },
-})
+});
 
-export const { setState } = appSlice.actions
+export const { setState } = appSlice.actions;
 
-export default appSlice.reducer
+export default appSlice.reducer;
