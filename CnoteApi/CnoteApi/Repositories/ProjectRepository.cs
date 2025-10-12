@@ -1,5 +1,6 @@
 ﻿using CnoteApi.Database;
 using CnoteApi.Models;
+using CnoteApi.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace CnoteApi.Repositories
@@ -14,7 +15,7 @@ namespace CnoteApi.Repositories
 
         public async Task<IEnumerable<Project>> GetAll(int userId)
         {
-            return await _dbContext.Projects.Where(p => p.UserId == userId).ToListAsync();
+            return await _dbContext.Projects.AsNoTracking().Where(p => p.UserId == userId).ToListAsync();
         }
 
         public async Task<Project> Add(Project project)

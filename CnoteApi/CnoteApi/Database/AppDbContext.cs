@@ -14,6 +14,7 @@ namespace CnoteApi.Database
         public DbSet<RefreshToken> RefreshTokens { get; set; } 
         public DbSet<Project> Projects { get; set; }
         public DbSet<TimeCard> TimeCards { get; set; }
+        public DbSet<Note> Notes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -48,6 +49,11 @@ namespace CnoteApi.Database
                       .WithOne(p => p.User)
                       .HasForeignKey(p => p.UserId)
                       .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasMany(e => e.Notes)
+                      .WithOne(n => n.User)
+                      .HasForeignKey(n => n.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<RefreshToken>(entity => 
@@ -76,6 +82,13 @@ namespace CnoteApi.Database
                 entity.Property(e => e.DayOfWeek).IsRequired().HasMaxLength(10);
             });
             // May need to add indexing for Timecard
+
+            modelBuilder.Entity<Note>(entity => 
+            { 
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).UseIdentityColumn();
+                entity.Property(e => e.Content).IsRequired();
+            });
         }
     }
 }

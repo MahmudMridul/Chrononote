@@ -11,6 +11,7 @@
         public bool IsActive { get; set; }
         public ICollection<Project> Projects { get; set; } = new List<Project>();
         public ICollection<TimeCard> TimeCards { get; set; } = new List<TimeCard>();
+        public ICollection<Note> Notes { get; set; } = new List<Note>();
 
     }
 }

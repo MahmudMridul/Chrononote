@@ -1,5 +1,6 @@
 ﻿using CnoteApi.Database;
 using CnoteApi.Models;
+using CnoteApi.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace CnoteApi.Repositories
