@@ -1,6 +1,6 @@
 ﻿using CnoteApi.Dtos;
 using CnoteApi.Models;
-using CnoteApi.Repositories;
+using CnoteApi.Repositories.IRepositories;
 using System.Text.RegularExpressions;
 
 namespace CnoteApi.Services

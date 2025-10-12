@@ -1,6 +1,6 @@
 ﻿using CnoteApi.Models;
 
-namespace CnoteApi.Repositories
+namespace CnoteApi.Repositories.IRepositories
 {
     public interface IUserRepository
     {

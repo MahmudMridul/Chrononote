@@ -1,5 +1,6 @@
 using CnoteApi.Database;
 using CnoteApi.Repositories;
+using CnoteApi.Repositories.IRepositories;
 using CnoteApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,7 @@ namespace CnoteApi
             builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
             builder.Services.AddScoped<ITimeCardRepository, TimeCardRepository>();
             builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
+            builder.Services.AddScoped<INoteRepository, NoteRepository>();
 
             // Services
             builder.Services.AddScoped<AuthValidationService>();
